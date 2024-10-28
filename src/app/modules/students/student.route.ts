@@ -1,8 +1,8 @@
-import express from "express"
-import { StudentControllers } from "./student.controller";
+import express from 'express';
+import { StudentControllers } from './student.controller';
 
 const router = express.Router();
 
+router.post('/student-create', StudentControllers.crearteStudent);
 
-// will call controller func
-router.post("/student-create", StudentControllers.crearteStudent)
+export const StudentRoute = router;

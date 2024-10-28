@@ -40,4 +40,4 @@ const studentSchema = new Schema<Student>({
   isActive: ['active', 'Blocked'],
 });
 
-const StudentModel = model<Student>('Student', studentSchema);
+export const StudentModel = model<Student>('Student', studentSchema);
