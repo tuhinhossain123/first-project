@@ -27,8 +27,22 @@ const getAllStudents = async (req: Request, res: Response) => {
     console.log(error);
   }
 };
+const getSingleStudents = async (req: Request, res: Response) => {
+  try {
+    const { studentId } = req.params;
+    const result = await StudentServices.getSingleStudentsFromDB(studentId);
+    res.status(200).json({
+      success: true,
+      message: 'Student are ritrived successfully',
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const StudentControllers = {
   crearteStudent,
   getAllStudents,
+  getSingleStudents,
 };
