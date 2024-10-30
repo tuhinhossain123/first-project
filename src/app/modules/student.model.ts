@@ -95,7 +95,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
+const studentSchema = new Schema<TStudent, StudentModel>({
   id: {
     type: String,
     required: [true, 'Student ID is required.'],
@@ -181,9 +181,17 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
   },
 });
 
-studentSchema.methods.isUserExtis = async function (id: string) {
-  const exitsUser = await Student.findOne({ id: id });
-  return exitsUser;
-};
+// create a static method
+studentSchema.statics.isUserExtis = async function(id:string){
+    const exitsUser = await Student.findOne({id})
+    return exitsUser
+}
+
+
+// create a custom instance method
+// studentSchema.methods.isUserExtis = async function (id: string) {
+//   const exitsUser = await Student.findOne({ id: id });
+//   return exitsUser;
+// };
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
