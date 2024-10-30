@@ -6,5 +6,6 @@ const router = express.Router();
 router.post('/student-create', StudentControllers.crearteStudent);
 router.get('/', StudentControllers.getAllStudents);
 router.get('/:studentId', StudentControllers.getSingleStudents);
+router.delete('/:studentId', StudentControllers.deleteStudents);
 
 export const StudentRoute = router;

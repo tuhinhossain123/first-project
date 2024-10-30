@@ -38,6 +38,7 @@ export type TStudent = {
   localGuardian: TLocalGuardian;
   photoUrl?: string;
   isActive: 'active' | 'Blocked';
+  isDeleated: boolean;
 };
 
 // for create a static

@@ -186,6 +186,10 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     default: 'active',
     trim: true,
   },
+  isDeleated: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // pre save midleware
@@ -203,6 +207,20 @@ studentSchema.pre('save', async function (next) {
 // post save midleware
 studentSchema.post('save', function (doc, next) {
   doc.password = '';
+  next();
+});
+
+// queiry midleware
+studentSchema.pre('find', function (next) {
+  this.find({ isDeleated: { $ne: true } });
+  next();
+});
+studentSchema.pre('findOne', function (next) {
+  this.find({ isDeleated: { $ne: true } });
+  next();
+});
+studentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleated: { $ne: true } } });
   next();
 });
 

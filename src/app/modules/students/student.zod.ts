@@ -57,7 +57,7 @@ const studentValidationSchema = z.object({
     .trim()
     .min(1, 'Email address is required.')
     .email('Email is not valid.'),
-  emargencyContact: z.string().trim().default(''), 
+  emargencyContact: z.string().trim().default(''),
   bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
   presetAddress: z.string().trim().min(1, 'Present address is required.'),
   permanentAddress: z.string().trim().min(1, 'Permanent address is required.'),
@@ -65,6 +65,7 @@ const studentValidationSchema = z.object({
   localGuardian: localGuardianValidationSchema,
   photoUrl: z.string().trim(),
   isActive: z.enum(['active', 'blocked']).default('active'),
+  isDeleated: z.boolean(),
 });
 
 export default studentValidationSchema;
