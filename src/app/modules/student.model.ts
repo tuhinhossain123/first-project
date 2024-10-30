@@ -8,6 +8,8 @@ import {
   TStudent,
   TUserName,
 } from './students/student.interface';
+import bcrypt from 'bcrypt';
+import config from '../config';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -102,6 +104,11 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     unique: true,
     trim: true,
   },
+  password: {
+    type: String,
+    required: [true, 'Student password is required.'],
+    trim: true,
+  },
   name: {
     type: userNameSchema,
     required: [true, 'Student name is required.'],
@@ -182,12 +189,21 @@ const studentSchema = new Schema<TStudent, StudentModel>({
 });
 
 // pre save midleware
-studentSchema.pre('save', function () {
-  console.log(this, 'pre hok: we will save data');
+studentSchema.pre('save', async function (next) {
+  //   console.log(this, 'pre hok: we will save data');
+
+  // hasing password and save into DB
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bycrpt_salt_round),
+  );
+  next();
 });
 // post save midleware
-studentSchema.post('save', function () {
-  console.log(this, 'post hok: we save our data');
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
 });
 
 // create a static method
