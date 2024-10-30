@@ -181,9 +181,13 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   },
 });
 
-// midleware
+// pre save midleware
 studentSchema.pre('save', function () {
   console.log(this, 'pre hok: we will save data');
+});
+// post save midleware
+studentSchema.post('save', function () {
+  console.log(this, 'post hok: we save our data');
 });
 
 // create a static method
