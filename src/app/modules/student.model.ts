@@ -181,12 +181,16 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   },
 });
 
-// create a static method
-studentSchema.statics.isUserExtis = async function(id:string){
-    const exitsUser = await Student.findOne({id})
-    return exitsUser
-}
+// midleware
+studentSchema.pre('save', function () {
+  console.log(this, 'pre hok: we will save data');
+});
 
+// create a static method
+studentSchema.statics.isUserExtis = async function (id: string) {
+  const exitsUser = await Student.findOne({ id });
+  return exitsUser;
+};
 
 // create a custom instance method
 // studentSchema.methods.isUserExtis = async function (id: string) {
