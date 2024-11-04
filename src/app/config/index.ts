@@ -7,4 +7,5 @@ export default {
     process.env.DATABASE_URL || 'mongodb://localhost:27017/mydatabase',
   port: process.env.PORT || 3000,
   bycrpt_salt_round: process.env.BYCRPT_SALT_ROUND,
+  default_pass: process.env.DEFAULT_PASSWORD,
 };

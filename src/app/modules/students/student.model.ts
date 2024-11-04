@@ -1,9 +1,13 @@
 import { model, Schema } from 'mongoose';
 import validator from 'validator';
 
-import bcrypt from 'bcrypt';
-import config from '../../config';
-import { StudentModel, TGuardian, TLocalGuardian, TStudent, TUserName } from './student.interface';
+import {
+  StudentModel,
+  TGuardian,
+  TLocalGuardian,
+  TStudent,
+  TUserName,
+} from './student.interface';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -11,13 +15,6 @@ const userNameSchema = new Schema<TUserName>({
     required: [true, 'First name is required.'],
     trim: true,
     maxlength: [20, 'First Name can not be mor then 20 cheracters'],
-    // validate: {
-    //   validator: function (value: string) {
-    //     const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
-    //     return firstNameStr === value;
-    //   },
-    //   message: '{VALUE} is not capitalize formate',
-    // },
   },
   middleName: {
     type: String,
@@ -27,11 +24,6 @@ const userNameSchema = new Schema<TUserName>({
     type: String,
     required: [true, 'Last name is required.'],
     trim: true,
-    // validate:{
-    //     validator:(value: string)=>validator.isAlpha(value),
-    //     message: "{VALUE} is not a valid"
-
-    // }
   },
 });
 
@@ -99,10 +91,11 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       unique: true,
       trim: true,
     },
-    password: {
-      type: String,
-      required: [true, 'Student password is required.'],
-      trim: true,
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User id is required.'],
+      unique: true,
+      ref: 'User',
     },
     name: {
       type: userNameSchema,
@@ -172,15 +165,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: String,
       trim: true,
     },
-    isActive: {
-      type: String,
-      enum: {
-        values: ['active', 'blocked'],
-        message: '{VALUE} is not a valid status option.',
-      },
-      default: 'active',
-      trim: true,
-    },
     isDeleated: {
       type: Boolean,
       default: false,
@@ -196,24 +180,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 // virtual
 studentSchema.virtual('fullName').get(function () {
   return this.name.firstName + this.name.middleName + this.name.lastName;
-});
-
-// pre save midleware
-studentSchema.pre('save', async function (next) {
-  //   console.log(this, 'pre hok: we will save data');
-
-  // hasing password and save into DB
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bycrpt_salt_round),
-  );
-  next();
-});
-// post save midleware
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
 });
 
 // queiry midleware
@@ -235,11 +201,5 @@ studentSchema.statics.isUserExtis = async function (id: string) {
   const exitsUser = await Student.findOne({ id });
   return exitsUser;
 };
-
-// create a custom instance method
-// studentSchema.methods.isUserExtis = async function (id: string) {
-//   const exitsUser = await Student.findOne({ id: id });
-//   return exitsUser;
-// };
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
