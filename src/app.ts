@@ -4,6 +4,7 @@ import { StudentRoute } from './app/modules/students/student.route';
 import { UserRoute } from './app/modules/user/user.route';
 import globalErrorHandler from './app/middleWares/globalErrorHandlre';
 import notFound from './app/middleWares/notFound';
+import router from './app/routes';
 const app: Application = express();
 
 // parsers
@@ -11,15 +12,14 @@ app.use(express.json());
 app.use(cors());
 
 // application route
-app.use('/api/v1/students', StudentRoute);
-app.use('/api/v1/users', UserRoute);
+app.use('/api/v1', router);
 
-const getAController = (_req: Request, res: Response) => {
+const test = (_req: Request, res: Response) => {
   const a = 10;
   res.send(a);
 };
 
-app.get('/', getAController);
+app.get('/', test);
 
 app.use(globalErrorHandler);
 
